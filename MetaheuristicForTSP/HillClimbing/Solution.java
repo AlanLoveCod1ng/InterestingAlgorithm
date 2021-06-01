@@ -1,4 +1,3 @@
-
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -105,20 +104,9 @@ class OPT{
 				}
 			}
 		}
-		nList2OPT.add(optimal);
 	}
 
-	public void printSolutions(){
-		for(Solution e: nList2OPT){
-			e.printSolution();
-		}
-	}
 	public void min(){
-		Solution min = nList2OPT.get(0);
-		for(Solution e: nList2OPT){
-			if(e.fitness<min.fitness) min = e;
-		}
-		min.printSolution();
-		System. out.println(min.fitness);
+		optimal.printSolution();
 	}
 }
