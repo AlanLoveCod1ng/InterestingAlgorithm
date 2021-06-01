@@ -1,4 +1,3 @@
-
 public class MainClass {
 
 	public static void main(String[] args) {
@@ -9,11 +8,17 @@ public class MainClass {
 		pb.constructDistances();
 		//pb.printDistances();
 	//	Solution best = new Solution(pb);
-		for(int i = 0; i< 50; i++){
+		int sumFitness = 0;
+		long t1 = System.currentTimeMillis();
+		for(int i = 0; i< 10; i++){
 			Solution sol = new Solution(pb);
-			OPT opt = new OPT(sol, 5000, 80);
+			OPT opt = new OPT(sol, 500, 80);
 			opt.optimal.printSolution();
+			sumFitness+= opt.optimal.fitness;
 		}
+		long t2 = System.currentTimeMillis() - t1;
+		sumFitness = sumFitness/10;
+		System.out.println("Iterating 10 times cost "+t2+" milliseconds, and average fitness is "+sumFitness);
 	}
 
 }
