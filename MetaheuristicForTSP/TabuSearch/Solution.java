@@ -68,6 +68,13 @@ public class Solution implements Comparable<Solution> {
 		return randomInt;
 	}
 
+	boolean equals(Solution sol1){
+		if(this.fitness == sol1.fitness){
+			return true;
+		}
+		return false;
+	}
+
 }
 
 
@@ -75,9 +82,10 @@ class OPT{
 	public Problem problem;// record problem
 	public Solution optimal;// record global optimal solution so far
 	public int numOfCities;
-	TabuList <Solution> tabuList;
+	TabuList tabuList;
 	int stopCondition;// we terminate searching if times reaching stopCondition
 	int iterationTimes;// number of iteration of tabu element
+	TabuList trend = new TabuList(20);
 
 	OPT(Solution optimal,int stopCondition, int iterationTimes){
 		this.optimal = optimal; 
@@ -85,7 +93,7 @@ class OPT{
 		this.numOfCities = optimal.cities.length;
 		this.stopCondition = stopCondition;
 		this.iterationTimes = iterationTimes;
-		tabuList = new TabuList<>(iterationTimes);
+		tabuList = new TabuList(iterationTimes);
 		generateOPT();
 	}
 
@@ -115,35 +123,53 @@ class OPT{
 				neighborList.poll();
 			}
 
-			if(neighborList.peek().fitness>optimalNeighbor.fitness||// if our next optimalNeighbor is less that previous, we will increase
-				neighborList.peek().fitness==optimalNeighbor.fitness){//if the stopCurrent == stopCondition, we think no more optimal by default
-				stopCurrent++;
+			if(trend.currentSize == 20){
+				int averageFirstTen = 0;
+				int averageLastTen = 0;
+				int count = 0;
+				for(Solution e: trend.list){
+					if(count<10){
+						averageFirstTen += e.fitness;
+					}
+					if(count>=10&&count<20){
+						averageLastTen += e.fitness;
+					}
+					count++;
+				}
+				averageFirstTen /= 10;
+				averageLastTen /= 10;
+				if(averageFirstTen<averageLastTen){
+					stopCurrent++;
+				}
+				if(averageLastTen<averageFirstTen){
+					stopCurrent = 0;
+				}
 				if(stopCurrent == stopCondition){
 					break;
 				}
 			}
-			else{
-				stopCurrent=0;
-			}
+			
 
-			optimalNeighbor = neighborList.poll(); // refresh optialNeighbor
+			optimalNeighbor = neighborList.poll(); // refresh optimalNeighbor
 			tabuList.add(optimalNeighbor);
+			trend.add(optimalNeighbor);
 			if(optimalNeighbor.fitness<optimal.fitness){
 				optimal = optimalNeighbor;
 			}
+//			optimalNeighbor.printSolution();
 		}
 	}
 
 }
-class TabuList<E>{
-	LinkedList<E> list = new LinkedList<>();
+class TabuList{
+	LinkedList<Solution> list = new LinkedList<>();
 	int maxSize;
 	int currentSize = 0;
 	boolean limit = false;
 	TabuList(int maxSize){
 		this.maxSize = maxSize;
 	}
-	void add(E e){
+	void add(Solution e){
 		if(limit){
 			list.addLast(e);
 			list.removeFirst();
@@ -156,8 +182,13 @@ class TabuList<E>{
 			}
 		}
 	}
-	boolean contains(E e){
-		return list.contains(e);
+	boolean contains(Solution sol){
+		for(Solution e: list){
+			if(e.equals(sol)){
+				return true;
+			}
+		}
+		return false;
 	}
 }
 class fitnessComparator implements Comparator<Solution>{
