@@ -80,6 +80,7 @@ class OPT{
 	public int optimalParentSize;
 	public int parentSize;
 	public double sumWeight;
+	public Solution optimal;
 
 	OPT(int parentSize, int Generations, Problem problem, int optimalParentSize){
 		this.problem = problem;
@@ -126,6 +127,7 @@ class OPT{
 			}
 			listSort(childList, 0, childList.size()-1);
 			parentList = childList;
+			optimal = parentList.get(parentList.size()-1);
 			updateSumWeight();
 			childList = null;
 			System.out.println("In "+z+" th Generation, the optimal fitness is "+parentList.get(parentList.size()-1).fitness);
@@ -269,22 +271,6 @@ class OPT{
 			newWeight+=1/(double)e.fitness;
 		}
 		sumWeight = newWeight;
-	}
-
-
-	
-	public void printSolutions(){
-		for(Solution e: parentList){
-			e.printSolution();
-		}
-	}
-	public void min(){
-		Solution min = parentList.get(0);
-		for(Solution e: parentList){
-			if(e.fitness<min.fitness) min = e;
-		}
-		min.printSolution();
-		System. out.println(min.fitness);
 	}
 }
 class fitnessComparator implements Comparator<Solution>{
