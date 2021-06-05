@@ -1,6 +1,6 @@
 public class MainClass {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception{
 		int nbCities = 50;
 		String fileName = "C://Users//18301//Desktop//File//CPS 3410//code//Assignment//CPS3410AS//src//distances_entre_villes_50.txt";
 
@@ -16,7 +16,7 @@ public class MainClass {
 		for (int i = 0; i < 10; i++) {
 			opt.optimal = new Solution(pb);
 			opt.generateOPT();
-			opt.min();
+			opt.optimal.printSolution();
 			sumFitness+=opt.optimal.fitness;
 		}
 		long t2 = System.currentTimeMillis();
@@ -26,3 +26,4 @@ public class MainClass {
 	}
 
 }
+
