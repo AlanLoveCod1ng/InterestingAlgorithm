@@ -72,14 +72,11 @@ public class Solution implements Comparable<Solution> {
 
 class OPT{
 	public Problem problem;
-	public ArrayList<Solution> nList2OPT;
 	public Solution optimal;
 
 	OPT(Solution optimal){
 		this.optimal = optimal;
 		this.problem = optimal.problem;
-		nList2OPT = new ArrayList<>();
-		nList2OPT.add(optimal);
 		generateOPT();
 	}
 
@@ -157,35 +154,5 @@ class OPT{
 				break;
 			}
 		}
-		
-
-		nList2OPT.add(optimal);
-	}
-
-	public void printSolutions(){
-		for(Solution e: nList2OPT){
-			e.printSolution();
-		}
-	}
-	public void min(){
-		Solution min = nList2OPT.get(0);
-		for(Solution e: nList2OPT){
-			if(e.fitness<min.fitness) min = e;
-		}
-		min.printSolution();
-		System. out.println(min.fitness);
-	}
-}
-class fitnessComparator implements Comparator<Solution>{
-	@Override
-
-	public int compare(Solution s1, Solution s2) {
-		if(s1.fitness>s2.fitness){
-			return 1;
-		}
-		if(s1.fitness<s2.fitness){
-			return -1;
-		}
-		return 0;
 	}
 }
