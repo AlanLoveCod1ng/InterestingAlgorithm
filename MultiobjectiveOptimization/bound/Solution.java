@@ -133,7 +133,7 @@ class OPT{
 			childList = null;
 			optimalList.add(optimal);
 		}
-		
+		listSort(optimalList, 0, optimalList.size()-1);
 	}
 
 	public void crossOver(Solution parent1, Solution parent2, ArrayList<Solution> childList){
