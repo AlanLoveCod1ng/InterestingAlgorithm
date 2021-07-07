@@ -6,20 +6,20 @@ import java.io.IOException;
 public class Problem {
 	private int nbCities;
 	private String mediumFileName;
-	private String upperFileName;
+//	private String upperFileName;
 	private String lowerFileName;
 	private int[][] mediumDistances;
-	private int[][] upperDistances;
+//	private int[][] upperDistances;
 	private int[][] lowerDistances;
 
-	public Problem(int nbCities, String mediumFileName, String upperFileName, String lowerFileName) {
+	public Problem(int nbCities, String mediumFileName,/* String upperFileName,*/ String lowerFileName) {
 		this.nbCities = nbCities;
 		this.mediumFileName = mediumFileName;
 		this.lowerFileName = lowerFileName;
-		this.upperFileName = upperFileName;
+//		this.upperFileName = upperFileName;
 
 		this.mediumDistances = new int[nbCities][nbCities];
-		this.upperDistances = new int[nbCities][nbCities];
+//		this.upperDistances = new int[nbCities][nbCities];
 		this.lowerDistances = new int[nbCities][nbCities];
 	}
 
@@ -68,26 +68,26 @@ public class Problem {
 		}
 
 
-		for (int i = 0; i < nbCities; i++)
-			upperDistances[i] = new int[nbCities];
-		try (BufferedReader br = new BufferedReader(new FileReader(upperFileName))) {
-			String sCurrentLine;
-			int i = -1;
-			while ((sCurrentLine = br.readLine()) != null) {
-				String[] res = sCurrentLine.split("\\s+");
-				int h = 0;
-				i++;
-				for (int j = i + 1; j < nbCities; j++) {
-					upperDistances[i][j] = Integer.parseInt(res[h]);
-					upperDistances[j][i] = upperDistances[i][j];
-					h++;
-				}
-			}
-			for (int k = 0; k < nbCities; k++)
-				upperDistances[k][k] = -10;
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		// for (int i = 0; i < nbCities; i++)
+		// 	upperDistances[i] = new int[nbCities];
+		// try (BufferedReader br = new BufferedReader(new FileReader(upperFileName))) {
+		// 	String sCurrentLine;
+		// 	int i = -1;
+		// 	while ((sCurrentLine = br.readLine()) != null) {
+		// 		String[] res = sCurrentLine.split("\\s+");
+		// 		int h = 0;
+		// 		i++;
+		// 		for (int j = i + 1; j < nbCities; j++) {
+		// 			upperDistances[i][j] = Integer.parseInt(res[h]);
+		// 			upperDistances[j][i] = upperDistances[i][j];
+		// 			h++;
+		// 		}
+		// 	}
+		// 	for (int k = 0; k < nbCities; k++)
+		// 		upperDistances[k][k] = -10;
+		// } catch (IOException e) {
+		// 	e.printStackTrace();
+		// }
 	}
 
 	// public void printDistances() {
@@ -119,9 +119,9 @@ public class Problem {
 		return mediumDistances;
 	}
 
-	public int[][] getUpperDistances() {
-		return upperDistances;
-	}
+	// public int[][] getUpperDistances() {
+	// 	return upperDistances;
+	// }
 
 	public int[][] getLowerDistances() {
 		return lowerDistances;
@@ -135,7 +135,7 @@ public class Problem {
 		this.lowerDistances = distances;
 	}
 	
-	public void setUpperDistances(int[][] distances) {
-		this.upperDistances = distances;
-	}
+	// public void setUpperDistances(int[][] distances) {
+	// 	this.upperDistances = distances;
+	// }
 }
