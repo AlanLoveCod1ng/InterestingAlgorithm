@@ -7,10 +7,12 @@ public class Solution implements Comparable<Solution> {
 	Problem problem;
 	public int[] cities;
 	public int fitness;
+	public int fitnessObj1;
+	public int fitnessObj2;
 	public boolean selected = false;
 	public double lower;
 	public double medium;
-	public double upper;
+//	public double upper;
 
 	// public Solution(Problem problem) {
 	// 	this.problem = problem;
@@ -19,24 +21,26 @@ public class Solution implements Comparable<Solution> {
 	// 	evaluateSolution();
 	// }
 
-	public Solution(Problem problem, double medium, double upper, double lower){
+	public Solution(Problem problem, double medium,/* double upper,*/ double lower){
 		this.problem = problem;
 		cities = new int[problem.getNbCities()];
 		this.lower = lower;
 		this.medium = medium;
-		this.upper = upper;
+//		this.upper = upper;
 		generateRandom();
 		evaluateSolution();
+		evaluateSubFitness();
 	}
 
-	public Solution(int [] cities,Problem problem, double medium, double upper, double lower) {
+	public Solution(int [] cities,Problem problem, double medium,/* double upper,*/ double lower) {
 		this.problem = problem;
 		fitness = -1;
 		this.lower = lower;
 		this.medium = medium;
-		this.upper = upper;
+//		this.upper = upper;
 		this.cities = cities;
 		evaluateSolution();
+		evaluateSubFitness();
 	}
 
 	// Initialize a solution : a cycle passing by all cities
@@ -64,18 +68,30 @@ public class Solution implements Comparable<Solution> {
 		double temp = 0;
 		for (int i = 0; i < problem.getNbCities() - 1; i++)
 			temp += lower*problem.getLowerDistances()[cities[i]][cities[i + 1]] +
-					   upper*problem.getUpperDistances()[cities[i]][cities[i + 1]] +
+//					   upper*problem.getUpperDistances()[cities[i]][cities[i + 1]] +
 					   medium*problem.getMediumDistances()[cities[i]][cities[i + 1]];
 		temp += lower*problem.getLowerDistances()[cities[0]][cities[problem.getNbCities() - 1]] +
-				upper*problem.getUpperDistances()[cities[0]][cities[problem.getNbCities() - 1]] +
+//				upper*problem.getUpperDistances()[cities[0]][cities[problem.getNbCities() - 1]] +
 				medium*problem.getMediumDistances()[cities[0]][cities[problem.getNbCities() - 1]];
 		fitness = (int)temp;
+	}
+
+	public void evaluateSubFitness() {
+		fitnessObj1 = 0;
+		for (int i = 0; i < problem.getNbCities() - 1; i++)
+			fitnessObj1 += problem.getLowerDistances()[cities[i]][cities[i + 1]];
+		fitnessObj1 += problem.getLowerDistances()[cities[0]][cities[problem.getNbCities() - 1]];
+
+		fitnessObj2 = 0;
+		for (int i = 0; i < problem.getNbCities() - 1; i++)
+			fitnessObj2 += problem.getMediumDistances()[cities[i]][cities[i + 1]];
+		fitnessObj2 += problem.getMediumDistances()[cities[0]][cities[problem.getNbCities() - 1]];
 	}
 
 	public void printSolution() {
 		for (int i = 0; i < problem.getNbCities(); i++)
 			System.out.print(cities[i] + "-");
-		System.out.println("--> " + fitness + " km. medium= "+medium+ " upper= "+upper+" lower= "+lower);
+		System.out.println("--> " + fitness + " km. medium= "+medium+" "+fitnessObj2+ " lower= "+lower+" "+fitnessObj1);
 	}
 
 	@Override
@@ -106,20 +122,20 @@ class OPT{
 
 	public double lower;
 	public double medium;
-	public double upper;
+//	public double upper;
 
-	OPT(int parentSize, int Generations, Problem problem, int optimalParentSize, double medium, double upper, double lower){
+	OPT(int parentSize, int Generations, Problem problem, int optimalParentSize, double medium,/* double upper,*/ double lower){
 		this.problem = problem;
 		this.parentSize = parentSize;
 		this.optimalParentSize = optimalParentSize;
 
 		this.lower = lower;
 		this.medium = medium;
-		this.upper = upper;
+//		this.upper = upper;
 
 		parentList = new ArrayList<>();
 		for(int i = 0; i < parentSize; i++){
-			Solution newSol = new Solution(problem, medium, upper, lower);
+			Solution newSol = new Solution(problem, medium,/* upper,*/ lower);
 			newSol = VNS(newSol);
 			sumWeight += 1/(double)newSol.fitness;
 			parentList.add(newSol);
@@ -184,7 +200,7 @@ class OPT{
 				}
 			}
 		}
-		return new Solution(child_cities,problem,medium, upper, lower);
+		return new Solution(child_cities,problem,medium,/* upper,*/ lower);
 	}
 
 	public void mutation(Solution child1, Solution child2, ArrayList<Solution> childList){
@@ -234,7 +250,7 @@ class OPT{
 						index++;
 					}
 					System.arraycopy(temp, 0, cities1, i+1, temp.length);
-					Solution newSolution = new Solution(cities1, problem,medium, upper, lower);
+					Solution newSolution = new Solution(cities1, problem,medium,/* upper,*/ lower);
 					if(newSolution.fitness<tempOptimal.fitness){
 						tempOptimal = newSolution;
 					}
@@ -246,8 +262,8 @@ class OPT{
 			}
 			//city insertion
 			cities = tempOptimal.cities;
-			Solution previous = new Solution(tempOptimal.cities.clone(), problem,medium, upper, lower);
-			Solution origin = new Solution(tempOptimal.cities.clone(), problem,medium, upper, lower);
+			Solution previous = new Solution(tempOptimal.cities.clone(), problem,medium,/* upper,*/ lower);
+			Solution origin = new Solution(tempOptimal.cities.clone(), problem,medium,/* upper,*/ lower);
 			for(int i = 0; i < cities.length-2; i++){
 				previous = origin;
 				for(int j = i+1; j<cities.length-1; j++){
@@ -258,7 +274,7 @@ class OPT{
 						cities1[z-1] = cities1[z];
 					}
 					cities1[cities1.length-1] = temp;
-					Solution newSolution = new Solution(cities1, problem,medium, upper, lower);
+					Solution newSolution = new Solution(cities1, problem,medium,/* upper,*/ lower);
 					previous = newSolution;
 					if(newSolution.fitness<tempOptimal.fitness){
 						tempOptimal = newSolution;
@@ -277,7 +293,7 @@ class OPT{
 					int temp = cities1[i+1];
 					cities1[i+1] = cities1[j+1];
 					cities1[j+1] = temp; 
-					Solution newSolution = new Solution(cities1, problem,medium, upper, lower);
+					Solution newSolution = new Solution(cities1, problem,medium,/* upper,*/ lower);
 					if(newSolution.fitness<tempOptimal.fitness){
 						tempOptimal = newSolution;
 						i=0;
