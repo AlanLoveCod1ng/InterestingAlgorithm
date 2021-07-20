@@ -115,6 +115,12 @@ class OPT{
 	public void generateOPT() throws Exception{
 		int generationCount = 0;
 		while(true){
+			for(Solution e: parentList){
+				e.crowdIndex = 0;
+				e.dominatedNumber = 0;
+				e.dominatingSolutions = new ArrayList<>();
+				e.rank = 0;
+			}
 			ArrayList<Solution> combination = new ArrayList<>(parentList);
 			combination.addAll(childList);
 			paretoFronts = FNDS(combination); //fast-non-dominated-sort
